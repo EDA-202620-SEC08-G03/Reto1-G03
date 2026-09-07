@@ -105,6 +105,119 @@ def req_1(catalog, producto):
     """
     Retorna el resultado del requerimiento 1
     """
+    
+    start_time = get_time()
+    
+    sales_lista = catalog['sales']
+    tamaño = lt.size(sales_lista)
+    
+    catalog['sales_sublist'] = lt.new_list()
+    
+    total_filtrados = 0
+    sum_price = 0.0
+    sum_discount = 0.0
+    sum_boxes = 0.0
+    sum_marketing = 0.0
+    
+    min_price, max_price = float('inf'), float('-inf')
+    min_discount, max_discount = float('inf'), float('-inf')
+    min_boxes, max_boxes = float('inf'), float('-inf')
+    min_mkt, max_mkt = float('inf'), float('-inf')
+    
+    years_count = {}
+    
+    orden_mayorcosto = None
+    orden_menorcosto = None
+    
+    for i in range(tamaño):
+        order = lt.get_element(sales_lista, i)
+        
+        if order['Product'].strip().lower() == producto.strip().lower():
+            
+            lt.add_last(catalog['sales_sublist'], order)
+            total_filtrados += 1
+            
+            price = order['Price_per_Box']
+            discount = order['Discount_Pct']
+            boxes = order['Boxes_Shipped']
+            mkt = order['Marketing_Spend']
+            amount = order['Amount']
+            
+            sum_price += price
+            if price < min_price: min_price = price
+            if price > max_price: max_price = price
+            
+            sum_discount += discount
+            if discount < min_discount: min_discount = discount
+            if discount > max_discount: max_discount = discount
+            
+            sum_boxes += boxes
+            if boxes < min_boxes: min_boxes = boxes
+            if boxes > max_boxes: max_boxes = boxes
+            
+            sum_mkt += mkt
+            if mkt < min_mkt: min_mkt = mkt
+            if mkt > max_mkt: max_mkt = mkt
+            
+            year = extrañer_año(order['Order_Date'])
+            if year != 'Unknown':
+                years_count[year] = years_count.get(year, 0) + 1
+            
+            if orden_mayorcosto is None:
+                orden_mayorcosto = order
+            elif amount > orden_mayorcosto['Amount']:
+                orden_mayorcosto = order
+            elif amount == orden_mayorcosto['Amount']:
+                if mkt < orden_mayorcosto['Marketing_Spend']:
+                    orden_mayorcosto = order
+                    
+            if orden_menorcosto is None:
+                orden_menorcosto = order
+            elif amount < orden_menorcosto['Amount']:
+                orden_menorcosto = order
+            elif amount == orden_menorcosto['Amount']:
+                if mkt < orden_menorcosto['Marketing_Spend']:
+                    orden_menorcosto = order
+
+    end_time = get_time()
+    elapsed_time = delta_time(start_time, end_time)
+    
+    if total_filtrados == 0:
+        return {
+            'tiempo_ejecucion_ms': elapsed_time,
+            'total_pedidos': 0
+        }
+        
+    prom_costo = sum_price / total_filtrados
+    prom_descuento = sum_discount / total_filtrados
+    prom_boxes = sum_boxes / total_filtrados
+    prom_marketing = sum_marketing / total_filtrados
+    
+    best_year = "Unknown"
+    if years_count:
+        best_year = max(years_count, key=years_count.get)
+        
+    dic_res = {
+        'tiempo_ejecucion_ms': elapsed_time,
+        'total_pedidos': total_filtrados,
+        'promedio_precio': prom_costo,
+        'precio_minimo': min_price,
+        'precio_maximo': max_price,
+        'promedio_descuento': prom_descuento,
+        'descuento_minimo': min_discount,
+        'descuento_maximo': max_discount,
+        'promedio_cajas': prom_boxes,
+        'cajas_minimo': min_boxes,
+        'cajas_maximo': max_boxes,
+        'promedio_marketing': prom_marketing,
+        'marketing_minimo': min_mkt,
+        'marketing_maximo': max_mkt,
+        'año_mas_pedidos': best_year,
+        'pedido_mayor_monto': orden_mayorcosto,
+        'pedido_menor_monto': orden_menorcosto
+    }
+    
+    return dic_res
 
 def req_2(catalog, min_price, max_price):
     """
