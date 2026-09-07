@@ -1,11 +1,24 @@
 import time
-
+import 
 def new_logic():
     """
     Crea el catalogo para almacenar las estructuras de datos
     """
-    #TODO: Llama a las funciónes de creación de las estructuras de datos
-    pass
+    catalog = {'': None,
+                   '': None,
+                   '': None,
+                   '': None,
+                   '': None,
+                   '': None}
+    
+        catalog[''] = lt.new_list()
+        catalog[''] = lt.new_list()
+        catalog[''] = lt.new_list()
+        catalog[''] = lt.new_list()
+        catalog[''] = lt.new_list()
+        catalog[""] = lt.new_list()
+        return catalog
+    
 
 
 # Funciones para la carga de datos
