@@ -1,5 +1,11 @@
 import time
-import 
+import csv
+import os
+
+from DataStructures.List import array_list as lt
+from DataStructures.Queue import queue as q 
+from DataStructures.Stack import stack as st
+from DataStructures.List import single_linked_list as sll
 def new_logic():
     """
     Crea el catalogo para almacenar las estructuras de datos
