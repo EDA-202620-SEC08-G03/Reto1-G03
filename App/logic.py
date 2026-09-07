@@ -105,7 +105,7 @@ def req_1(catalog, producto):
     """
     Retorna el resultado del requerimiento 1
     """
-    
+  
     start_time = get_time()
     
     sales_lista = catalog['sales']
@@ -224,7 +224,7 @@ def req_2(catalog, min_price, max_price):
     Retorna el resultado del requerimiento 2
     """
     start=get_time()
-    orders = catalog['orders']
+    orders = catalog['sales']
     lista_filtrada = lt.newlist()
     for i in range(lt.size(orders)):
         actual = lt.getelement(orders, i)
