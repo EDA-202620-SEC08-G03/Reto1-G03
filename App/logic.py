@@ -10,20 +10,10 @@ def new_logic():
     """
     Crea el catalogo para almacenar las estructuras de datos
     """
-    catalog = {'': None,
-                   '': None,
-                   '': None,
-                   '': None,
-                   '': None,
-                   '': None}
-    
-        catalog[''] = lt.new_list()
-        catalog[''] = lt.new_list()
-        catalog[''] = lt.new_list()
-        catalog[''] = lt.new_list()
-        catalog[''] = lt.new_list()
-        catalog[""] = lt.new_list()
-        return catalog
+    catalog = {
+        "orders": lt.newList()
+    }
+    return catalog
     
 
 
@@ -47,12 +37,57 @@ def req_1(catalog):
     pass
 
 
-def req_2(catalog):
+def req_2(catalog, min_price, max_price):
     """
     Retorna el resultado del requerimiento 2
     """
-    # TODO: Modificar el requerimiento 2
-    pass
+    start=get_time()
+    orders = catalog['orders']
+    lista_filtrada = lt.newlist()
+    for i in range(lt.size(orders)):
+        actual = lt.getelement(orders, i)
+        if min_price <= float(actual['Price_per_Box']) <= max_price:
+            lt.addlast(lista_filtrada, actual)
+    if lt.size(lista_filtrada) > 0:
+        descuento_total = 0
+        marketing_total = 0
+        precio_total = 0
+        for i in range(lt.size(lista_filtrada)):
+            actual = lt.get_element(lista_filtrada, i)
+            descuento_total += float(actual["Discount_Pct"])
+            marketing_total += float(actual["Marketing_Spend"])
+            precio_total += float(actual["Price_per_Box"])
+        pmd_descuento = descuento_total / lt.size(lista_filtrada)
+        pmd_marketing = marketing_total / lt.size(lista_filtrada)
+        pmd_precio = precio_total / lt.size(lista_filtrada)
+        recent = lt.get_element(lista_filtrada, 0)
+        for i in range(1,lt.size(lista_filtrada)):
+            actual = lt.get_element(lista_filtrada, i)
+            if actual["Order_Date"] > recent["Order_Date"]:
+                recent = actual
+            elif actual["Order_Date"] == recent["Order_Date"]:
+                if float(actual["Amount"]) > float(recent["Amount"])    :
+                    recent = actual
+        min_order = lt.get_element(lista_filtrada, 0)
+        max_order = lt.get_element(lista_filtrada, 0)
+        for i in range(1,lt.size(lista_filtrada)):
+            actual = lt.get_element(lista_filtrada, i)
+            if float(actual["Amount"]) < float(min_order["Amount"]) or (
+            float(actual["Amount"]) == float(min_order["Amount"]) and float(actual["Price_per_Box"]) < float(min_order["Price_per_Box"])
+            ):
+                min_order = actual
+            if float(actual["Amount"]) > float(max_order["Amount"]) or (float(actual["Amount"]) == float(max_order["Amount"]) and float(actual["Price_per_Box"]) < float(max_order["Price_per_Box"])
+            ):
+                max_order = actual
+    end=get_time()
+    elapsed = delta_time(start, end)
+    return {"elapsed_time": elapsed,
+            "pmd_descuento": pmd_descuento,
+            "pmd_marketing": pmd_marketing,
+            "pmd_precio": pmd_precio,
+            "recent_order": recent,
+            "min_order": min_order,
+            "max_order": max_order}
 
 
 def req_3(catalog):
