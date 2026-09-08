@@ -1,12 +1,22 @@
 import sys
+import App.logic as logic
+from DataStructures.List import array_list as lt
 
+archivos = {
+    "1": "chocolate_sale_100_elementos.csv",
+    "2": "chocolate_sale_20_ptc.csv",
+    "3": "chocolate_sale_40_ptc.csv",
+    "4": "chocolate_sale_60_ptc.csv",
+    "5": "chocolate_sale_80_ptc.csv",
+    "6": "chocolate_sale_100_ptc.csv",
+}
 
 def new_logic():
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función de la lógica donde se crean las estructuras de datos
-    pass
+    control = logic.new_logic()
+    return control
 
 def print_menu():
     print("Bienvenido")
@@ -23,16 +33,67 @@ def load_data(control):
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
-    pass
+    print("\n¿Qué archivo desea cargar?\n")
+    print("1- 100 elementos (pruebas rápidas)")
+    print("2- 20%")
+    print("3- 40%")
+    print("4- 60%")
+    print("5- 80%")
+    print("6- 100% (Definitivo)")
+    opcion = input("Seleccione una opción: ")
+    filename = archivos.get(opcion, archivos["1"])
 
+    start_time = logic.get_time()
+    logic.load_data(control, filename)
+    end_time = logic.get_time()
+    tiempo = logic.delta_time(start_time, end_time)
+
+    resumen = logic.resumen_carga(control)
+    print_resumen_datos(tiempo, resumen)
+    
+def print_resumen_datos(tiempo, resumen):
+    
+    print("\nTiempo de carga: {0:.2f} ms".format(tiempo))
+    print("Total de pedidos cargados: {0}".format(resumen["total"]))
+
+    print("\nPedido de menor cantidad:")
+    print_pedido(resumen["menor"])
+
+    print("\nPedido de mayor cantidad:")
+    print_pedido(resumen["mayor"])
+
+    print("\nPrimeros 5 registros:")
+    for p in resumen["primeros_5"]:
+        print_pedido(p)
+
+    print("\nÚltimos 5 registros:")
+    for p in resumen["ultimos_5"]:
+        print_pedido(p)
 
 def print_data(control, id):
     """
         Función que imprime un dato dado su ID
     """
-    #TODO: Realizar la función para imprimir un elemento
-    pass
+    
+    pedidos = control["ordenes"]
+    total = lt.size(pedidos)
+    
+    encontrado = None
+    i = 0
+    while encontrado is None and i < total:
+        actual = lt.get_element(pedidos, i)
+        if actual["Order_ID"] == id:
+            encontrado = actual
+        i += 1
+
+    if encontrado is not None:
+        print("\nPedido encontrado:")
+        print_pedido(encontrado)
+    else:
+        print("\nNo se encontró ningún pedido con Order_ID = {0}".format(id))
+
+def print_pedido(p):
+    print(" {0} | {1} | {2} | {3} | {4} | ${5:.2f} | ${6:.2f}".format(p["Order_ID"], p["Product"], p["Country"], p["Channel"],p["Order_Date"], p["Price_per_Box"], p["Amount"]))
 
 def print_req_1(control):
     """
