@@ -27,7 +27,6 @@ def to_float(valor):
         return float(valor)
     return None
 
-
 def to_int(valor):
     """
     Convierte un texto a int (pasando por float, por si viene como "148.0").
@@ -55,6 +54,7 @@ def convertir_fila(fila):
     }
 
     return order
+
 # Funciones para la carga de datos
 
 def load_data(catalog, filename):
@@ -110,14 +110,23 @@ def resumen_carga(catalog):
         "primeros_5": primeros_5,
         "ultimos_5": ultimos_5,
     }
+    
 # Funciones de consulta sobre el catálogo
 
 def req_1(catalog, producto):
     """
     Retorna el resultado del requerimiento 1
     """
-
     
+    start = get_time()
+    ordenes = catalog["ordenes"]
+    lista_filtrada = sll.new_list()
+    tamaño_ordenes = lt.size(ordenes)
+    
+    for i in range(tamaño_ordenes):
+        actual = lt.get_element(ordenes, i)
+        if actual["Product"].lower() == producto.lower():
+            sll.add_last(lista_filtrada, actual)  
 
 def req_2(catalog, min_price, max_price):
     """
@@ -185,14 +194,12 @@ def req_2(catalog, min_price, max_price):
             "Max_order": dicmaximo, 
             "total_productos": lt.size(lista_filtrada)}
 
-
 def req_3(catalog):
     """
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
     pass
-
 
 def req_4(catalog,product, country):
     """
@@ -259,7 +266,6 @@ def req_4(catalog,product, country):
             "Max1": dict1,
             "Max2": dict2,
             "Total_pedidos": lt.size(lista_filtrada)} 
-
 
 def req_5(catalog,filtro, producto,fecha_inicial, fecha_final):
     """
@@ -421,7 +427,6 @@ def get_time():
     devuelve el instante tiempo de procesamiento en milisegundos
     """
     return float(time.perf_counter()*1000)
-
 
 def delta_time(start, end):
     """
