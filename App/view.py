@@ -99,9 +99,40 @@ def print_req_1(control):
     """
         Función que imprime la solución del Requerimiento 1 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 1
-    pass
+    
+    producto = input("\nIngrese el nombre del producto: ")
+    resultado = logic.req_1(control, producto)
 
+    if resultado["total_orders"] == 0:
+        print("\n{0}".format(resultado["Mensaje"]))
+        return
+
+    print("\nTiempo de ejecución: {0:.2f} ms".format(resultado["Elapsed_time"]))
+    print("Total de pedidos: {0}".format(resultado["total_orders"]))
+
+    print("\nPrice_per_Box -> Promedio: {0:.2f} | Min: {1:.2f} | Max: {2:.2f}".format(
+        resultado["Pmd_price_per_box"], resultado["Min_price_per_box"], resultado["Max_price_per_box"]))
+
+    print("Discount_Pct -> Promedio: {0:.2f} | Min: {1:.2f} | Max: {2:.2f}".format(
+        resultado["Pmd_discount_pct"], resultado["Min_discount_pct"], resultado["Max_discount_pct"]))
+
+    print("Boxes_Shipped -> Promedio: {0:.2f} | Min: {1} | Max: {2}".format(
+        resultado["Pmd_boxes_shipped"], resultado["Min_boxes_shipped"], resultado["Max_boxes_shipped"]))
+
+    print("Marketing_Spend -> Promedio: {0:.2f} | Min: {1:.2f} | Max: {2:.2f}".format(
+        resultado["Pmd_marketing_spend"], resultado["Min_marketing_spend"], resultado["Max_marketing_spend"]))
+
+    print("\nAño con más pedidos: {0}".format(resultado["Anio_mas_pedidos"]))
+
+    print("\nPedido de mayor Amount:")
+    mayor = resultado["Pedido_mayor_amount"]
+    print("  Order_ID: {0} | Country: {1} | Order_Date: {2} | Price_per_Box: {3:.2f} | Amount: {4:.2f}".format(
+        mayor["Order_ID"], mayor["Country"], mayor["Order_Date"], mayor["Price_per_Box"], mayor["Amount"]))
+
+    print("\nPedido de menor Amount:")
+    menor = resultado["Pedido_menor_amount"]
+    print("  Order_ID: {0} | Country: {1} | Order_Date: {2} | Price_per_Box: {3:.2f} | Amount: {4:.2f}".format(
+        menor["Order_ID"], menor["Country"], menor["Order_Date"], menor["Price_per_Box"], menor["Amount"]))
 
 def print_req_2(control):
     """

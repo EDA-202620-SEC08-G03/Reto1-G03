@@ -126,7 +126,135 @@ def req_1(catalog, producto):
     for i in range(tamaño_ordenes):
         actual = lt.get_element(ordenes, i)
         if actual["Product"].lower() == producto.lower():
-            sll.add_last(lista_filtrada, actual)  
+            sll.add_last(lista_filtrada, actual) 
+            
+    total = sll.size(lista_filtrada)
+
+    if total == 0:
+        end = get_time()
+        return {
+            "Elapsed_time": delta_time(start, end),
+            "total_orders": 0,
+            "Mensaje": "No hay pedidos para ese producto"
+        }
+
+    primero = sll.get_element(lista_filtrada, 0)
+
+    suma_price = primero["Price_per_Box"]
+    min_price = primero["Price_per_Box"]
+    max_price = primero["Price_per_Box"]
+
+    suma_discount = primero["Discount_Pct"]
+    min_discount = primero["Discount_Pct"]
+    max_discount = primero["Discount_Pct"]
+
+    suma_boxes = primero["Boxes_Shipped"]
+    min_boxes = primero["Boxes_Shipped"]
+    max_boxes = primero["Boxes_Shipped"]
+
+    suma_marketing = primero["Marketing_Spend"]
+    min_marketing = primero["Marketing_Spend"]
+    max_marketing = primero["Marketing_Spend"]
+
+    pedido_mayor = primero
+    pedido_menor = primero
+
+    anios = {}
+    anio_primero = primero["Order_Date"][0:4]
+    anios[anio_primero] = 1
+
+    for i in range(1, total):
+        actual = sll.get_element(lista_filtrada, i)
+
+        suma_price += actual["Price_per_Box"]
+        if actual["Price_per_Box"] < min_price:
+            min_price = actual["Price_per_Box"]
+        if actual["Price_per_Box"] > max_price:
+            max_price = actual["Price_per_Box"]
+
+        suma_discount += actual["Discount_Pct"]
+        if actual["Discount_Pct"] < min_discount:
+            min_discount = actual["Discount_Pct"]
+        if actual["Discount_Pct"] > max_discount:
+            max_discount = actual["Discount_Pct"]
+
+        suma_boxes += actual["Boxes_Shipped"]
+        if actual["Boxes_Shipped"] < min_boxes:
+            min_boxes = actual["Boxes_Shipped"]
+        if actual["Boxes_Shipped"] > max_boxes:
+            max_boxes = actual["Boxes_Shipped"]
+
+        suma_marketing += actual["Marketing_Spend"]
+        if actual["Marketing_Spend"] < min_marketing:
+            min_marketing = actual["Marketing_Spend"]
+        if actual["Marketing_Spend"] > max_marketing:
+            max_marketing = actual["Marketing_Spend"]
+
+        anio_actual = actual["Order_Date"][0:4]
+        if anio_actual in anios:
+            anios[anio_actual] = anios[anio_actual] + 1
+        else:
+            anios[anio_actual] = 1
+
+        if actual["Amount"] > pedido_mayor["Amount"] or (
+            actual["Amount"] == pedido_mayor["Amount"] and actual["Marketing_Spend"] < pedido_mayor["Marketing_Spend"]
+        ):
+            pedido_mayor = actual
+
+        if actual["Amount"] < pedido_menor["Amount"] or (
+            actual["Amount"] == pedido_menor["Amount"] and actual["Marketing_Spend"] < pedido_menor["Marketing_Spend"]
+        ):
+            pedido_menor = actual
+
+    anio_mas_pedidos = None
+    max_conteo = 0
+    for anio in anios:
+        if anios[anio] > max_conteo:
+            max_conteo = anios[anio]
+            anio_mas_pedidos = anio
+
+    pmd_price = suma_price / total
+    pmd_discount = suma_discount / total
+    pmd_boxes = suma_boxes / total
+    pmd_marketing = suma_marketing / total
+
+    dic_mayor = {
+        "Order_ID": pedido_mayor["Order_ID"],
+        "Country": pedido_mayor["Country"],
+        "Order_Date": pedido_mayor["Order_Date"],
+        "Price_per_Box": pedido_mayor["Price_per_Box"],
+        "Amount": pedido_mayor["Amount"]
+    }
+
+    dic_menor = {
+        "Order_ID": pedido_menor["Order_ID"],
+        "Country": pedido_menor["Country"],
+        "Order_Date": pedido_menor["Order_Date"],
+        "Price_per_Box": pedido_menor["Price_per_Box"],
+        "Amount": pedido_menor["Amount"]
+    }
+
+    end = get_time()
+
+    return {
+        "Elapsed_time": delta_time(start, end),
+        "total_orders": total,
+        "Pmd_price_per_box": pmd_price,
+        "Min_price_per_box": min_price,
+        "Max_price_per_box": max_price,
+        "Pmd_discount_pct": pmd_discount,
+        "Min_discount_pct": min_discount,
+        "Max_discount_pct": max_discount,
+        "Pmd_boxes_shipped": pmd_boxes,
+        "Min_boxes_shipped": min_boxes,
+        "Max_boxes_shipped": max_boxes,
+        "Pmd_marketing_spend": pmd_marketing,
+        "Min_marketing_spend": min_marketing,
+        "Max_marketing_spend": max_marketing,
+        "Anio_mas_pedidos": anio_mas_pedidos,
+        "Pedido_mayor_amount": dic_mayor,
+        "Pedido_menor_amount": dic_menor
+    } 
 
 def req_2(catalog, min_price, max_price):
     """
