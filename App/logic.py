@@ -124,7 +124,7 @@ def req_2(catalog, min_price, max_price):
     Retorna el resultado del requerimiento 2
     """
     start=get_time()
-    orders = catalog['sales']
+    orders = catalog['ordenes']
     lista_filtrada = lt.new_list()
     for i in range(lt.size(orders)):
         actual = lt.get_element(orders, i)
@@ -145,9 +145,9 @@ def req_2(catalog, min_price, max_price):
         recent = lt.get_element(lista_filtrada, 0)
         for i in range(1,lt.size(lista_filtrada)):
             actual = lt.get_element(lista_filtrada, i)
-            if float(actual["Order_Date"]) > float(recent["Order_Date"]):
+            if actual["Order_Date"] > recent["Order_Date"]:
                 recent = actual
-            elif float(actual["Order_Date"]) == float(recent["Order_Date"]):
+            elif actual["Order_Date"] == recent["Order_Date"]:
                 if float(actual["Amount"]) > float(recent["Amount"]):
                     recent = actual
         min_order = lt.get_element(lista_filtrada, 0)
