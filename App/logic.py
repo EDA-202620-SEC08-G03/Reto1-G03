@@ -85,11 +85,8 @@ def resumen_carga(catalog):
     for i in range(total):
         actual = lt.get_element(pedidos, i)
 
-        # Mayor Amount (desempate: menor Price_per_Box)
         if actual["Amount"] > mayor["Amount"] or (actual["Amount"] == mayor["Amount"] and actual["Price_per_Box"] < mayor["Price_per_Box"]):
             mayor = actual
-
-        # Menor Amount (mismo criterio de desempate)
         if actual["Amount"] < menor["Amount"] or (actual["Amount"] == menor["Amount"] and actual["Price_per_Box"] < menor["Price_per_Box"]):
             menor = actual
 
@@ -411,10 +408,6 @@ def req_4(catalog,product,country):
     start = get_time()
     orders = catalog['ordenes']
     lista_filtrada = lt.new_list()
-    suma_price_per_box = 0
-    suma_discount_pct = 0
-    suma_marketing_spend = 0
-    suma_boxes_shipped = 0
     for i in range(lt.size(orders)):
         actual = lt.get_element(orders, i)
         if actual["Product"].lower().strip() == product.lower().strip() and actual["Country"].lower().strip() == country.lower().strip():
@@ -490,19 +483,18 @@ def req_5(catalog,filtro, producto,fecha_inicial, fecha_final):
         "Total_pedidos": 0,
         "Mensaje": "No se encontraron pedidos en el rango de fechas"
     }
-     
-    suma_price_per_box = 0
-    suma_boxes_shipped = 0
-    suma_marketing_spend = 0
-    actual = lt.get_element(lista_filtrada, 0)
-    respuesta = actual
-    for i in range(lt.size(lista_filtrada)):
+    
+    respuesta = lt.get_element(lista_filtrada, 0)
+    suma_price_per_box = respuesta["Price_per_Box"]
+    suma_boxes_shipped = respuesta["Boxes_Shipped"]
+    suma_marketing_spend = respuesta["Marketing_Spend"]
+    for i in range(1,lt.size(lista_filtrada)):
         actual = lt.get_element(lista_filtrada, i)
         
         suma_price_per_box += actual["Price_per_Box"]
         suma_boxes_shipped += actual["Boxes_Shipped"]
         suma_marketing_spend += actual["Marketing_Spend"]
-        if filtro == "MAYOR":
+        if filtro == "MAYOR" or filtro == "mayor":
             
             if actual["Amount"] > respuesta["Amount"]:
                 respuesta = actual
@@ -512,7 +504,7 @@ def req_5(catalog,filtro, producto,fecha_inicial, fecha_final):
                 elif (actual["Price_per_Box"] == respuesta["Price_per_Box"]):
                     if actual["Marketing_Spend"] < respuesta["Marketing_Spend"]:
                         respuesta = actual
-        elif filtro == "MENOR":
+        elif filtro == "MENOR" or filtro == "menor":
             
             if actual["Amount"] < respuesta["Amount"]:
                 respuesta = actual
@@ -547,10 +539,7 @@ def req_6(catalog,fecha_inicial, fecha_final):
     lista_filtrada = sll.new_list()
     for i in range(sll.size(orders)):
         actual = lt.get_element(orders, i)  
-        order_date = actual["Order_Date"]
-        
-        
-        if fecha_inicial <= order_date <= fecha_final:
+        if fecha_inicial <= actual["Order_Date"] <= fecha_final:
             sll.add_last(lista_filtrada, actual)
             
             if actual["Channel"] not in canales:
