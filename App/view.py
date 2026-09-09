@@ -149,11 +149,11 @@ def print_req_3(control):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
-    print("\nIngrese la fecha inicial del rango para conocer la cantidad de pedidos:")
-    fecha_inicial = input("Fecha Inicial: ")
-    print("\nIngrese la fecha final del rango para conocer la cantidad de pedidos:")
-    fecha_final = input("Fecha Final: ")
-    print(logic.req_3(control,fecha_inicial,fecha_final))
+    print("\nIngrese el país del que desea conocer la cantidad de pedidos:")
+    country = input("País: ")
+    print("\nIngrese el canal del que desea conocer la cantidad de pedidos:")
+    channel = input("Canal: ")
+    print(logic.req_3(control,country,channel))
 
 
 def print_req_4(control):

@@ -254,73 +254,6 @@ def req_1(catalog, producto):
         "Pedido_menor_amount": dic_menor
     } 
 
-def req_2(catalog, min_price, max_price):
-    """
-    Retorna el resultado del requerimiento 2
-    """
-    start=get_time()
-    orders = catalog['ordenes']
-    lista_filtrada = lt.new_list()
-    for i in range(lt.size(orders)):
-        actual = lt.get_element(orders, i)
-        if min_price <= actual['Price_per_Box'] <= max_price:
-            lt.add_last(lista_filtrada, actual)
-    if lt.size(lista_filtrada) == 0:
-        return {
-            "tiempo_ejecucion_ms": delta_time(start, get_time()),
-            "Pmd_descuento": None,
-            "Pmd_marketing": None,
-            "Pmd_precio": None,
-            "Recent_order": None,
-            "Min_order": None,
-            "Max_order": None,
-            "total_productos": 0
-        }
-    else:
-        descuento_total = 0
-        marketing_total = 0
-        precio_total = 0
-        for i in range(lt.size(lista_filtrada)):
-            actual = lt.get_element(lista_filtrada, i)
-            descuento_total += actual["Discount_Pct"]
-            marketing_total += actual["Marketing_Spend"]
-            precio_total += actual["Price_per_Box"]
-        pmd_descuento = descuento_total / lt.size(lista_filtrada)
-        pmd_marketing = marketing_total / lt.size(lista_filtrada)
-        pmd_precio = precio_total / lt.size(lista_filtrada)
-        recent = lt.get_element(lista_filtrada, 0)
-        for i in range(1,lt.size(lista_filtrada)):
-            actual = lt.get_element(lista_filtrada, i)
-            if actual["Order_Date"] > recent["Order_Date"]:
-                recent = actual
-            elif actual["Order_Date"] == recent["Order_Date"]:
-                if actual["Amount"] > recent["Amount"]:
-                    recent = actual
-        min_order = lt.get_element(lista_filtrada, 0)
-        max_order = lt.get_element(lista_filtrada, 0)
-        for i in range(1,lt.size(lista_filtrada)):
-            actual = lt.get_element(lista_filtrada, i)
-            if actual["Amount"] < min_order["Amount"] or (
-            actual["Amount"] == min_order["Amount"] and actual["Price_per_Box"] < min_order["Price_per_Box"]
-            ):
-                min_order = actual
-            if actual["Amount"] > max_order["Amount"] or (actual["Amount"] == max_order["Amount"] and actual["Price_per_Box"] < max_order["Price_per_Box"]):
-                max_order = actual
-    dicreciente={"Producto": recent["Product"], "Pais": recent["Country"], "Canal": recent["Channel"], "Fecha": recent["Order_Date"], "Amount": recent["Amount"],"Price_per_box": recent["Price_per_Box"]}
-    dicminimo={"Producto": min_order["Product"], "Pais": min_order["Country"], "Canal": min_order["Channel"], "Fecha": min_order["Order_Date"], "Amount": min_order["Amount"],"Price_per_box": min_order["Price_per_Box"]}
-    dicmaximo={"Producto": max_order["Product"], "Pais": max_order["Country"], "Canal": max_order["Channel"], "Fecha": max_order["Order_Date"], "Amount": max_order["Amount"],"Price_per_box": max_order["Price_per_Box"]}
-    end=get_time()
-    elapsed = delta_time(start, end)
-    return {"tiempo_ejecucion_ms": elapsed,
-            "Pmd_descuento": pmd_descuento,
-            "Pmd_marketing": pmd_marketing,
-            "Pmd_precio": pmd_precio,
-            "Recent_order": dicreciente,
-            "Min_order": dicminimo,
-            "Max_order": dicmaximo, 
-            "total_productos": lt.size(lista_filtrada)}
-
-
 def req_3(catalog, country, channel):
     """
     Retorna el resultado del requerimiento 3
@@ -369,22 +302,99 @@ def req_3(catalog, country, channel):
     promedio_discount = suma_discount / total
     promedio_marketing = suma_marketing / total
     promedio_boxes = suma_boxes / total
-    i=0
-    mayor=False
-    while i<len(productos) and mayor==False:
-        if productos.keys()[i] == max(productos.values()):
-            producto_mas_frecuente = productos.keys()[i]
-            mayor = True
-        i += 1
-    j=0
-    anio_mas_pedidos = False
-    while j<len(anios) and anio_mas_pedidos==False:
-        if anios.keys()[j] == max(anios.values()):
-            anio_mas_pedidos = anios.keys()[j]
-            anio_mas_pedidos = True
-        j += 1
+    
+    producto_mas_frecuente = None
+    frecuencia_maxima = 0
+    for producto, frecuencia in productos.items():
+        if frecuencia > frecuencia_maxima:
+            frecuencia_maxima = frecuencia
+            producto_mas_frecuente = producto
+        
+    
+    anio_mas_pedidos = None
+    maximo_pedidos = 0
+    for anio, pedidos in anios.items():
+        if pedidos > maximo_pedidos:
+            maximo_pedidos = pedidos
+            anio_mas_pedidos = anio
     end = get_time()
 
+    return {
+        "Tiempo_ejecucion_ms": delta_time(start, end),
+        "Total_pedidos": total,
+        "Promedio_price_per_box": promedio_price,
+        "Promedio_discount_pct": promedio_discount,
+        "Promedio_marketing_spend": promedio_marketing,
+        "Promedio_boxes_shipped": promedio_boxes,
+        "Producto_mas_frecuente": producto_mas_frecuente,
+        "Año_mas_pedidos": anio_mas_pedidos
+    }
+
+
+def req_3(catalog, country, channel):
+    """
+    Retorna el resultado del requerimiento 3
+    """
+    # TODO: Modificar el requerimiento 3
+    start = get_time()
+    orders = catalog['ordenes']
+    lista_filtrada = lt.new_list()
+    productos = {}
+    anios = {}
+    for i in range(lt.size(orders)):
+        actual = lt.get_element(orders, i)
+        if actual["Country"].lower().strip() == country.lower().strip(): 
+            if actual["Channel"].lower().strip() == channel.lower().strip():
+                lt.add_last(lista_filtrada, actual)
+                
+    total = lt.size(lista_filtrada)
+    
+    if total == 0:
+        return {
+            "Tiempo_ejecucion_ms": delta_time(start, get_time()),
+            "Total_pedidos": 0,
+        }
+    
+    primero = lt.get_element(lista_filtrada, 0)
+    suma_price = primero["Price_per_Box"]
+    suma_discount = primero["Discount_Pct"]
+    suma_marketing = primero["Marketing_Spend"]
+    suma_boxes = primero["Boxes_Shipped"]
+
+    for i in range(1, total):
+        actual = lt.get_element(lista_filtrada, i)
+        anio= actual["Order_Date"][0:4]
+        suma_price += actual["Price_per_Box"]
+        suma_discount += actual["Discount_Pct"]
+        suma_marketing += actual["Marketing_Spend"]
+        suma_boxes += actual["Boxes_Shipped"]
+        if actual["Product"] in productos:
+            productos[actual["Product"]] += 1
+        else:
+            productos[actual["Product"]] = 1
+        if anio in anios:
+            anios[anio] += 1
+        else:
+            anios[anio] = 1
+
+    promedio_price = suma_price / total
+    promedio_discount = suma_discount / total
+    promedio_marketing = suma_marketing / total
+    promedio_boxes = suma_boxes / total
+    producto_mas_frecuente = None
+    frecuencia_maxima = 0
+    for producto, frecuencia in productos.items():
+        if frecuencia > frecuencia_maxima:
+            frecuencia_maxima = frecuencia
+            producto_mas_frecuente = producto
+    anio_mas_pedidos = None
+    maximo_pedidos = 0
+    for anio, pedidos in anios.items():
+        if pedidos > maximo_pedidos:
+            maximo_pedidos = pedidos
+            anio_mas_pedidos = anio
+
+    end = get_time()
     return {
         "Tiempo_ejecucion_ms": delta_time(start, end),
         "Total_pedidos": total,
