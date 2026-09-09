@@ -36,6 +36,8 @@ def to_int(valor):
         return int(float(valor))
     return None
 
+# Funciones para la carga de datos
+
 def convertir_fila(fila):
     """
     Convierte una fila del CSV (dict de strings) en un pedido con tipos correctos
@@ -54,8 +56,6 @@ def convertir_fila(fila):
     }
 
     return order
-
-# Funciones para la carga de datos
 
 def load_data(catalog, filename):
     """
