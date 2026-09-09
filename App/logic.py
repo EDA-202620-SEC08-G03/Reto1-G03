@@ -156,7 +156,8 @@ def req_1(catalog, producto):
     pedido_menor = primero
 
     anios = {}
-    anio_primero = primero["Order_Date"][0:4]
+    fecha_partida_primero = primero["Order_Date"].split("-")
+    anio_primero = fecha_partida_primero[0]
     anios[anio_primero] = 1
 
     nodo_actual = lista_filtrada["first"]["next"]
@@ -188,7 +189,8 @@ def req_1(catalog, producto):
         if actual["Marketing_Spend"] > max_marketing:
             max_marketing = actual["Marketing_Spend"]
 
-        anio_actual = actual["Order_Date"][0:4]
+        fecha_partida_actual = actual["Order_Date"].split("-")
+        anio_actual = fecha_partida_actual[0]
         if anio_actual in anios:
             anios[anio_actual] = anios[anio_actual] + 1
         else:
