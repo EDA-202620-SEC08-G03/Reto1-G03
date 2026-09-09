@@ -107,8 +107,11 @@ def print_req_2(control):
     """
         Función que imprime la solución del Requerimiento 2 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    print("\nIngrese el Precio Minimo del rango en el que desea buscar:")
+    min_price = float(input("Precio Mínimo: "))
+    print("\nIngrese el Precio Máximo del rango en el que desea buscar:")
+    max_price = float(input("Precio Máximo: "))
+    print(logic.req_2(control["catalog"], min_price, max_price))
 
 
 def print_req_3(control):
@@ -123,24 +126,37 @@ def print_req_4(control):
     """
         Función que imprime la solución del Requerimiento 4 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 4
-    pass
+    print("\nIngrese el país del que desea conocer la cantidad de pedidos:")
+    country = input("País: ")
+    print("\nIngrese el producto del que desea conocer la cantidad de pedidos:")
+    product = input("Producto: ")
+    print(logic.req_4(control["catalog"], country, product))
 
 
 def print_req_5(control):
     """
         Función que imprime la solución del Requerimiento 5 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 5
-    pass
-
+    print("\nIngrese el producto del que desea conocer la cantidad de pedidos:")
+    product = input("Producto: ")
+    print("\nIngrese el filtro para conocer el monto, mayor o menor:")
+    filtro = input("FILTRO (MAYOR O MENOR): ")
+    print("\nIngrese la fecha inicial del rango para conocer la cantidad de pedidos:")
+    fecha_inicial = input("Fecha Inicial: ")
+    print("\nIngrese la fecha final del rango para conocer la cantidad de pedidos:")
+    fecha_final = input("Fecha Final: ")
+    print(logic.req_5(control["catalog"], filtro, product, fecha_inicial, fecha_final))
 
 def print_req_6(control):
     """
         Función que imprime la solución del Requerimiento 6 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 6
-    pass
+    
+    print("\nIngrese la fecha inicial del rango para conocer la cantidad de pedidos:")
+    fecha_inicial = input("Fecha Inicial: ")
+    print("\nIngrese la fecha final del rango para conocer la cantidad de pedidos:")
+    fecha_final = input("Fecha Final: ")
+    print(logic.req_6(control["catalog"],fecha_inicial,fecha_final))
 
 # Se crea la lógica asociado a la vista
 control = new_logic()
