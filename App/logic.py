@@ -234,7 +234,7 @@ def req_1(catalog, producto):
 
     return {
         "tiempo_transcurrido": delta_time(start, end),
-        "total_orders": total,
+        "órdenes_totales": total,
         "Pmd_price_per_box": pmd_price,
         "Min_price_per_box": min_price,
         "Max_price_per_box": max_price,
