@@ -471,7 +471,7 @@ def req_6(catalog,fecha_inicial, fecha_final):
     canales = {}
     lista_filtrada = sll.new_list()
     for i in range(sll.size(orders)):
-        actual = lt.get_element(orders, i)
+        actual = lt.get_element(orders, i)  
         order_date = actual["Order_Date"]
         
         
