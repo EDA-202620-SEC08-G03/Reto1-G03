@@ -411,7 +411,9 @@ def req_4(catalog,product,country):
     Retorna el resultado del requerimiento 4
     """
     start = get_time()
+    
     orders = catalog['ordenes']
+    
     lista_filtrada = lt.new_list()
     for i in range(lt.size(orders)):
         actual = lt.get_element(orders, i)
@@ -420,49 +422,97 @@ def req_4(catalog,product,country):
     if lt.size(lista_filtrada) == 0:
         return {"Tiempo_ejecucion_ms": delta_time(start, get_time()), "message": "No hay pedidos que cumplan el filtro"}
     max1 = lt.get_element(lista_filtrada, 0)
-    max2 = None
-    suma_price_per_box = max1["Price_per_Box"]
-    suma_discount_pct = max1["Discount_Pct"]
-    suma_marketing_spend = max1["Marketing_Spend"]
-    suma_boxes_shipped = max1["Boxes_Shipped"]
-    for i in range(1, lt.size(lista_filtrada)):
-        actual = lt.get_element(lista_filtrada, i)
-        suma_price_per_box += actual["Price_per_Box"]
-        suma_discount_pct += actual["Discount_Pct"]
-        suma_marketing_spend += actual["Marketing_Spend"]
-        suma_boxes_shipped += actual["Boxes_Shipped"]
-        if actual["Amount"] > max1["Amount"]:
-            max2 = max1
-            max1 = actual
-        elif actual["Amount"] == max1["Amount"]:
-            if actual["Marketing_Spend"] < max1["Marketing_Spend"]:
-                max2 = max1
-                max1 = actual
-            elif actual["Marketing_Spend"] == max1["Marketing_Spend"]:
-                if actual["Order_ID"] < max1["Order_ID"]:
-                    max2 = max1
-                    max1 = actual
-        elif max2 is None or actual["Amount"] > max2["Amount"]:
-            max2 = actual
-        elif actual["Amount"] == max2["Amount"]:
-                if actual["Marketing_Spend"] < max2["Marketing_Spend"]:
-                    max2 = actual
-                elif actual["Marketing_Spend"] == max2["Marketing_Spend"]:
-                    if actual["Order_ID"] < max2["Order_ID"]:
-                        max2 = actual
-    pmd_price_per_box = suma_price_per_box / lt.size(lista_filtrada)
-    pmd_discount_pct = suma_discount_pct / lt.size(lista_filtrada)
-    pmd_marketing_spend = suma_marketing_spend / lt.size(lista_filtrada)
-    pmd_boxes_shipped = suma_boxes_shipped / lt.size(lista_filtrada)
-    dict1={"Order_ID": max1["Order_ID"],"Canal": max1["Channel"],"Fecha": max1["Order_Date"],"Cajas_enviadas": max1["Boxes_Shipped"],"Monto": max1["Amount"] }
-    if max2 is not None:
-        dict2={"Order_ID": max2["Order_ID"],"Canal": max2["Channel"],"Fecha": max2["Order_Date"],"Cajas_enviadas": max2["Boxes_Shipped"],"Monto": max2["Amount"] }
-    else:
-        dict2= None
-    end= get_time()
-    elapsed= delta_time(start, end)
     
-    return {"Tiempo_ejecucion_ms": elapsed,
+    max2 = None
+    
+    suma_price_per_box = max1["Price_per_Box"]
+    
+    suma_discount_pct = max1["Discount_Pct"]
+    
+    suma_marketing_spend = max1["Marketing_Spend"]
+    
+    suma_boxes_shipped = max1["Boxes_Shipped"]
+    
+    for i in range(1, lt.size(lista_filtrada)):
+        
+        actual = lt.get_element(lista_filtrada, i)
+        
+        suma_price_per_box += actual["Price_per_Box"]
+        
+        suma_discount_pct += actual["Discount_Pct"]
+        
+        suma_marketing_spend += actual["Marketing_Spend"]
+        
+        suma_boxes_shipped += actual["Boxes_Shipped"]
+        
+        if actual["Amount"] > max1["Amount"]:
+            
+            max2 = max1
+            
+            max1 = actual
+            
+        elif actual["Amount"] == max1["Amount"]:
+            
+            if actual["Marketing_Spend"] < max1["Marketing_Spend"]:
+                
+                max2 = max1
+                
+                max1 = actual
+                
+            elif actual["Marketing_Spend"] == max1["Marketing_Spend"]:
+                
+                if actual["Order_ID"] < max1["Order_ID"]:
+                    
+                    max2 = max1
+                    
+                    max1 = actual
+                    
+        elif max2 is None or actual["Amount"] > max2["Amount"]:
+            
+            max2 = actual
+            
+        elif actual["Amount"] == max2["Amount"]:
+            
+                if actual["Marketing_Spend"] < max2["Marketing_Spend"]:
+                    
+                    max2 = actual
+                    
+                elif actual["Marketing_Spend"] == max2["Marketing_Spend"]:
+                    
+                    if actual["Order_ID"] < max2["Order_ID"]:
+                        
+                        max2 = actual
+                        
+    pmd_price_per_box = suma_price_per_box / lt.size(lista_filtrada)
+    
+    pmd_discount_pct = suma_discount_pct / lt.size(lista_filtrada)
+    
+    pmd_marketing_spend = suma_marketing_spend / lt.size(lista_filtrada)
+    
+    pmd_boxes_shipped = suma_boxes_shipped / lt.size(lista_filtrada)
+    
+    dict1={"Order_ID": max1["Order_ID"],
+           "Canal": max1["Channel"],
+           "Fecha": max1["Order_Date"],
+           "Cajas_enviadas": max1["Boxes_Shipped"],
+           "Monto": max1["Amount"] }
+    
+    if max2 is not None:
+        
+        dict2={"Order_ID": max2["Order_ID"],
+               "Canal": max2["Channel"],
+               "Fecha": max2["Order_Date"],
+               "Cajas_enviadas": max2["Boxes_Shipped"],
+               "Monto": max2["Amount"] }
+    else:
+        
+        dict2= None
+        
+    end= get_time()
+    
+    tiempo_de_ejecucion= delta_time(start, end)
+    
+    return {"Tiempo_ejecucion_ms": tiempo_de_ejecucion,
             "Pmd_price_per_box": pmd_price_per_box,
             "Pmd_discount_pct": pmd_discount_pct,
             "Pmd_marketing_spend": pmd_marketing_spend,
@@ -524,8 +574,8 @@ def req_5(catalog,filtro, producto,fecha_inicial, fecha_final):
     pmd_marketing_spend = suma_marketing_spend / lt.size(lista_filtrada)
     dic_respuesta={"Price_per_box": respuesta["Price_per_Box"], "Cajas_enviadas": respuesta["Boxes_Shipped"], "Canal": respuesta["Channel"], "Fecha": respuesta["Order_Date"], "Monto": respuesta["Amount"],"Marketing_Spend": respuesta["Marketing_Spend"]}
     end= get_time()
-    elapsed= delta_time(start, end)
-    return {"Tiempo_ejecucion_ms": elapsed,
+    tiempo_de_ejecucion= delta_time(start, end)
+    return {"Tiempo_ejecucion_ms": tiempo_de_ejecucion,
             "Filtro": filtro,
             "Pmd_price_per_box": pmd_price_per_box,
             "Pmd_marketing_spend": pmd_marketing_spend,
@@ -603,9 +653,8 @@ def req_6(catalog,fecha_inicial, fecha_final):
             }
         }
     end= get_time()
-    elapsed= delta_time(start, end)
     return {
-        "Tiempo_ejecucion_ms": elapsed,
+        "Tiempo_ejecucion_ms": delta_time(start, end),
         "Total_pedidos": sll.size(lista_filtrada),
         "Canal_mas_usado": {
             "Nombre": canal_mas_usado,
