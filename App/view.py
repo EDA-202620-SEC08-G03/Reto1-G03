@@ -103,12 +103,12 @@ def print_req_1(control):
     producto = input("\nIngrese el nombre del producto: ")
     resultado = logic.req_1(control, producto)
 
-    if resultado["total_orders"] == 0:
+    if resultado["órdenes_totales"] == 0:
         print("\n{0}".format(resultado["Mensaje"]))
         return
 
-    print("\nTiempo de ejecución: {0:.2f} ms".format(resultado["Elapsed_time"]))
-    print("Total de pedidos: {0}".format(resultado["total_orders"]))
+    print("\nTiempo de ejecución: {0:.2f} ms".format(resultado["tiempo_transcurrido"]))
+    print("Total de pedidos: {0}".format(resultado["órdenes_totales"]))
 
     print("\nPrice_per_Box -> Promedio: {0:.2f} | Min: {1:.2f} | Max: {2:.2f}".format(
         resultado["Pmd_price_per_box"], resultado["Min_price_per_box"], resultado["Max_price_per_box"]))

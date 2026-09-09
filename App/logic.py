@@ -133,8 +133,8 @@ def req_1(catalog, producto):
     if total == 0:
         end = get_time()
         return {
-            "Elapsed_time": delta_time(start, end),
-            "total_orders": 0,
+            "tiempo_transcurrido": delta_time(start, end),
+            "órdenes_totales": 0,
             "Mensaje": "No hay pedidos para ese producto"
         }
 
@@ -143,19 +143,15 @@ def req_1(catalog, producto):
     suma_price = primero["Price_per_Box"]
     min_price = primero["Price_per_Box"]
     max_price = primero["Price_per_Box"]
-
     suma_discount = primero["Discount_Pct"]
     min_discount = primero["Discount_Pct"]
     max_discount = primero["Discount_Pct"]
-
     suma_boxes = primero["Boxes_Shipped"]
     min_boxes = primero["Boxes_Shipped"]
     max_boxes = primero["Boxes_Shipped"]
-
     suma_marketing = primero["Marketing_Spend"]
     min_marketing = primero["Marketing_Spend"]
     max_marketing = primero["Marketing_Spend"]
-
     pedido_mayor = primero
     pedido_menor = primero
 
@@ -163,9 +159,11 @@ def req_1(catalog, producto):
     anio_primero = primero["Order_Date"][0:4]
     anios[anio_primero] = 1
 
-    for i in range(1, total):
-        actual = sll.get_element(lista_filtrada, i)
-
+    nodo_actual = lista_filtrada["first"]["next"]
+    
+    while nodo_actual is not None:
+        actual = nodo_actual["info"]
+        
         suma_price += actual["Price_per_Box"]
         if actual["Price_per_Box"] < min_price:
             min_price = actual["Price_per_Box"]
@@ -196,15 +194,13 @@ def req_1(catalog, producto):
         else:
             anios[anio_actual] = 1
 
-        if actual["Amount"] > pedido_mayor["Amount"] or (
-            actual["Amount"] == pedido_mayor["Amount"] and actual["Marketing_Spend"] < pedido_mayor["Marketing_Spend"]
-        ):
+        if actual["Amount"] > pedido_mayor["Amount"] or (actual["Amount"] == pedido_mayor["Amount"] and actual["Marketing_Spend"] < pedido_mayor["Marketing_Spend"]):
             pedido_mayor = actual
 
-        if actual["Amount"] < pedido_menor["Amount"] or (
-            actual["Amount"] == pedido_menor["Amount"] and actual["Marketing_Spend"] < pedido_menor["Marketing_Spend"]
-        ):
+        if actual["Amount"] < pedido_menor["Amount"] or (actual["Amount"] == pedido_menor["Amount"] and actual["Marketing_Spend"] < pedido_menor["Marketing_Spend"]):
             pedido_menor = actual
+            
+        nodo_actual = nodo_actual["next"]
 
     anio_mas_pedidos = None
     max_conteo = 0
@@ -237,7 +233,7 @@ def req_1(catalog, producto):
     end = get_time()
 
     return {
-        "Elapsed_time": delta_time(start, end),
+        "tiempo_transcurrido": delta_time(start, end),
         "total_orders": total,
         "Pmd_price_per_box": pmd_price,
         "Min_price_per_box": min_price,
@@ -321,7 +317,6 @@ def req_2(catalog, min_price, max_price):
             "Min_order": dicminimo,
             "Max_order": dicmaximo, 
             "total_productos": lt.size(lista_filtrada)}
-
 
 def req_3(catalog, country, channel):
     """
