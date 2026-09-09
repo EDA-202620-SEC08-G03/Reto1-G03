@@ -369,7 +369,7 @@ def req_4(catalog,product,country):
                 if actual["Order_ID"] < max1["Order_ID"]:
                     max2 = max1
                     max1 = actual
-        elif actual["Amount"] > max2["Amount"] or max2 is None:
+        elif max2 is None or actual["Amount"] > max2["Amount"]:
             max2 = actual
         elif actual["Amount"] == max2["Amount"]:
                 if actual["Marketing_Spend"] < max2["Marketing_Spend"]:
@@ -469,14 +469,14 @@ def req_6(catalog,fecha_inicial, fecha_final):
     start= get_time()
     orders = catalog['ordenes']
     canales = {}
-    lista_filtrada = lt.new_list()
-    for i in range(lt.size(orders)):
+    lista_filtrada = sll.new_list()
+    for i in range(sll.size(orders)):
         actual = lt.get_element(orders, i)
         order_date = actual["Order_Date"]
         
         
         if fecha_inicial <= order_date <= fecha_final:
-            lt.add_last(lista_filtrada, actual)
+            sll.add_last(lista_filtrada, actual)
             
             if actual["Channel"] not in canales:
                 canales[actual["Channel"]] = {"total_amount": 0, "total_price_per_box": 0, "total_marketing_spend": 0, "max_order": None, "min_order": None, "total_orders": 0}
@@ -488,7 +488,7 @@ def req_6(catalog,fecha_inicial, fecha_final):
                 canales[actual["Channel"]]["max_order"] = actual
             if canales[actual["Channel"]]["min_order"] is None or actual["Amount"] < canales[actual["Channel"]]["min_order"]["Amount"]:
                 canales[actual["Channel"]]["min_order"] = actual
-    if lt.size(lista_filtrada) == 0:
+    if sll.size(lista_filtrada) == 0:
         
         return {
             "Tiempo_ejecucion_ms": delta_time(start, get_time()),
@@ -537,7 +537,7 @@ def req_6(catalog,fecha_inicial, fecha_final):
     elapsed= delta_time(start, end)
     return {
         "Tiempo_ejecucion_ms": elapsed,
-        "Total_pedidos": lt.size(lista_filtrada),
+        "Total_pedidos": sll.size(lista_filtrada),
         "Canal_mas_usado": {
             "Nombre": canal_mas_usado,
             "Total_pedidos": canales[canal_mas_usado]["total_orders"],
