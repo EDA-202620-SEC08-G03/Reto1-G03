@@ -370,7 +370,7 @@ def req_3(catalog, country, channel):
             actual["Amount"] == pedido_menor["Amount"] and actual["Price_per_Box"] < pedido_menor["Price_per_Box"]):
             pedido_menor = actual
             
-     pmd_price = suma_price / total
+    pmd_price = suma_price / total
     pmd_discount = suma_discount / total
     pmd_marketing = suma_marketing / total
     pmd_boxes = suma_boxes / total
