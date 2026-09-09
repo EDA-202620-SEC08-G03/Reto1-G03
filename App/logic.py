@@ -329,12 +329,12 @@ def req_3(catalog):
     # TODO: Modificar el requerimiento 3
     pass
 
-def req_4(catalog,product, country):
+def req_4(catalog,product,country):
     """
     Retorna el resultado del requerimiento 4
     """
     start= get_time()
-    orders = catalog['orders']
+    orders = catalog['ordenes']
     lista_filtrada = lt.new_list()
     suma_price_per_box = 0
     suma_discount_pct = 0
@@ -342,7 +342,7 @@ def req_4(catalog,product, country):
     suma_boxes_shipped = 0
     for i in range(lt.size(orders)):
         actual = lt.get_element(orders, i)
-        if actual["Product"].lower() == product.lower() and actual["Country"].lower() == country.lower():
+        if actual["Product"].lower().strip() == product.lower().strip() and actual["Country"].lower().strip() == country.lower().strip():
             lt.add_last(lista_filtrada, actual)
     if lt.size(lista_filtrada) == 0:
         return {"Tiempo_ejecucion_ms": delta_time(start, get_time()), "message": "No hay pedidos que cumplan el filtro"}
@@ -382,7 +382,10 @@ def req_4(catalog,product, country):
     pmd_marketing_spend = suma_marketing_spend / lt.size(lista_filtrada)
     pmd_boxes_shipped = suma_boxes_shipped / lt.size(lista_filtrada)
     dict1={"Order_ID": max1["Order_ID"],"Canal": max1["Channel"],"Fecha": max1["Order_Date"],"Cajas_enviadas": max1["Boxes_Shipped"],"Monto": max1["Amount"] }
-    dict2={"Order_ID": max2["Order_ID"],"Canal": max2["Channel"],"Fecha": max2["Order_Date"],"Cajas_enviadas": max2["Boxes_Shipped"],"Monto": max2["Amount"] }
+    if max2 is not None:
+        dict2={"Order_ID": max2["Order_ID"],"Canal": max2["Channel"],"Fecha": max2["Order_Date"],"Cajas_enviadas": max2["Boxes_Shipped"],"Monto": max2["Amount"] }
+    else:
+        dict2= None
     end= get_time()
     elapsed= delta_time(start, end)
     
@@ -400,7 +403,7 @@ def req_5(catalog,filtro, producto,fecha_inicial, fecha_final):
     Retorna el resultado del requerimiento 5
     """
     start= get_time()
-    orders = catalog['orders']   
+    orders = catalog['ordenes']   
     lista_filtrada = lt.new_list()
     for i in range(lt.size(orders)):
         actual = lt.get_element(orders, i)
@@ -464,7 +467,7 @@ def req_6(catalog,fecha_inicial, fecha_final):
     Retorna el resultado del requerimiento 6
     """
     start= get_time()
-    orders = catalog['orders']
+    orders = catalog['ordenes']
     canales = {}
     lista_filtrada = lt.new_list()
     for i in range(lt.size(orders)):

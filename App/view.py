@@ -142,7 +142,7 @@ def print_req_2(control):
     min_price = float(input("Precio Mínimo: "))
     print("\nIngrese el Precio Máximo del rango en el que desea buscar:")
     max_price = float(input("Precio Máximo: "))
-    print(logic.req_2(control["catalog"], min_price, max_price))
+    print(logic.req_2(control, min_price, max_price))
 
 
 def print_req_3(control):
@@ -161,7 +161,7 @@ def print_req_4(control):
     country = input("País: ")
     print("\nIngrese el producto del que desea conocer la cantidad de pedidos:")
     product = input("Producto: ")
-    print(logic.req_4(control["catalog"], country, product))
+    print(logic.req_4(control,product,country))
 
 
 def print_req_5(control):
@@ -176,7 +176,7 @@ def print_req_5(control):
     fecha_inicial = input("Fecha Inicial: ")
     print("\nIngrese la fecha final del rango para conocer la cantidad de pedidos:")
     fecha_final = input("Fecha Final: ")
-    print(logic.req_5(control["catalog"], filtro, product, fecha_inicial, fecha_final))
+    print(logic.req_5(control, filtro, product, fecha_inicial, fecha_final))
 
 def print_req_6(control):
     """
@@ -187,7 +187,7 @@ def print_req_6(control):
     fecha_inicial = input("Fecha Inicial: ")
     print("\nIngrese la fecha final del rango para conocer la cantidad de pedidos:")
     fecha_final = input("Fecha Final: ")
-    print(logic.req_6(control["catalog"],fecha_inicial,fecha_final))
+    print(logic.req_6(control,fecha_inicial,fecha_final))
 
 # Se crea la lógica asociado a la vista
 control = new_logic()
@@ -220,7 +220,7 @@ def main():
         elif int(inputs) == 5:
             print_req_5(control)
 
-        elif int(inputs) == 5:
+        elif int(inputs) == 6:
             print_req_6(control)
 
         elif int(inputs) == 7:
