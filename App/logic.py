@@ -322,18 +322,93 @@ def req_2(catalog, min_price, max_price):
             "Max_order": dicmaximo, 
             "total_productos": lt.size(lista_filtrada)}
 
-def req_3(catalog):
+
+def req_3(catalog, country, channel):
     """
     Retorna el resultado del requerimiento 3
     """
     # TODO: Modificar el requerimiento 3
-    pass
+    start = get_time()
+    orders = catalog['ordenes']
+    lista_filtrada = lt.new_list()
+    
+    for i in range(lt.size(orders)):
+        actual = lt.get_element(orders, i)
+        if actual["Country"].lower().strip() == country.lower().strip(): 
+            if actual["Channel"].lower().strip() == channel.lower().strip():
+                lt.add_last(lista_filtrada, actual)
+                
+    total = lt.size(lista_filtrada)
+    
+    if total == 0:
+        return {
+            "Tiempo_ejecucion_ms": delta_time(start, get_time()),
+            "Total_pedidos": 0,
+        }
+    
+    primero = lt.get_element(lista_filtrada, 0)
+    suma_price = primero["Price_per_Box"]
+    suma_discount = primero["Discount_Pct"]
+    suma_marketing = primero["Marketing_Spend"]
+    suma_boxes = primero["Boxes_Shipped"]
+    pedido_mayor = primero
+    pedido_menor = primero
 
+    for i in range(1, total):
+        actual = lt.get_element(lista_filtrada, i)
+
+        suma_price += actual["Price_per_Box"]
+        suma_discount += actual["Discount_Pct"]
+        suma_marketing += actual["Marketing_Spend"]
+        suma_boxes += actual["Boxes_Shipped"]
+
+        if actual["Amount"] > pedido_mayor["Amount"] or (
+            actual["Amount"] == pedido_mayor["Amount"] and actual["Price_per_Box"] < pedido_mayor["Price_per_Box"]):
+            pedido_mayor = actual
+
+        if actual["Amount"] < pedido_menor["Amount"] or (
+            actual["Amount"] == pedido_menor["Amount"] and actual["Price_per_Box"] < pedido_menor["Price_per_Box"]):
+            pedido_menor = actual
+            
+     pmd_price = suma_price / total
+    pmd_discount = suma_discount / total
+    pmd_marketing = suma_marketing / total
+    pmd_boxes = suma_boxes / total
+
+    dic_mayor = {
+        "Order_ID": pedido_mayor["Order_ID"],
+        "Product": pedido_mayor["Product"],
+        "Order_Date": pedido_mayor["Order_Date"],
+        "Price_per_Box": pedido_mayor["Price_per_Box"],
+        "Amount": pedido_mayor["Amount"]
+    }
+
+    dic_menor = {
+        "Order_ID": pedido_menor["Order_ID"],
+        "Product": pedido_menor["Product"],
+        "Order_Date": pedido_menor["Order_Date"],
+        "Price_per_Box": pedido_menor["Price_per_Box"],
+        "Amount": pedido_menor["Amount"]
+    }
+    
+    end = get_time()
+
+    return {
+        "Tiempo_ejecucion_ms": delta_time(start, end),
+        "Total_pedidos": total,
+        "Pmd_price_per_box": pmd_price,
+        "Pmd_discount_pct": pmd_discount,
+        "Pmd_marketing_spend": pmd_marketing,
+        "Pmd_boxes_shipped": pmd_boxes,
+        "Pedido_mayor_amount": dic_mayor,
+        "Pedido_menor_amount": dic_menor
+    }
+          
 def req_4(catalog,product,country):
     """
     Retorna el resultado del requerimiento 4
     """
-    start= get_time()
+    start = get_time()
     orders = catalog['ordenes']
     lista_filtrada = lt.new_list()
     suma_price_per_box = 0
