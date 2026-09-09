@@ -324,7 +324,6 @@ def req_3(catalog, country, channel):
     """
     Retorna el resultado del requerimiento 3
     """
-    # TODO: Modificar el requerimiento 3
     start = get_time()
     orders = catalog['ordenes']
     lista_filtrada = lt.new_list()
