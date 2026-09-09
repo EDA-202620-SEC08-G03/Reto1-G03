@@ -70,6 +70,9 @@ def print_resumen_datos(tiempo, resumen):
     for p in resumen["ultimos_5"]:
         print_pedido(p)
 
+def print_pedido(p):
+    print(" {0} | {1} | {2} | {3} | {4} | ${5:.2f} | ${6:.2f}".format(p["Order_ID"], p["Product"], p["Country"], p["Channel"],p["Order_Date"], p["Price_per_Box"], p["Amount"]))
+
 def print_data(control, id):
     """
         Función que imprime un dato dado su ID
@@ -91,9 +94,6 @@ def print_data(control, id):
         print_pedido(encontrado)
     else:
         print("\nNo se encontró ningún pedido con Order_ID = {0}".format(id))
-
-def print_pedido(p):
-    print(" {0} | {1} | {2} | {3} | {4} | ${5:.2f} | ${6:.2f}".format(p["Order_ID"], p["Product"], p["Country"], p["Channel"],p["Order_Date"], p["Price_per_Box"], p["Amount"]))
 
 def print_req_1(control):
     """
