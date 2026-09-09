@@ -1,7 +1,7 @@
 import time
 import csv
 import os
-
+from tabulate import tabulate
 from DataStructures.List import array_list as lt
 from DataStructures.Queue import queue as q 
 from DataStructures.Stack import stack as st
@@ -321,14 +321,14 @@ def req_2(catalog, min_price, max_price):
                "Price_per_box": max_order["Price_per_Box"]}
     end=get_time()
     elapsed = delta_time(start, end)
-    return {"tiempo_ejecucion_ms": elapsed,
+    return tabulate([{"tiempo_ejecucion_ms": elapsed,
             "Pmd_descuento": pmd_descuento,
             "Pmd_marketing": pmd_marketing,
             "Pmd_precio": pmd_precio,
             "Recent_order": dicreciente,
             "Min_order": dicminimo,
             "Max_order": dicmaximo, 
-            "total_productos": lt.size(lista_filtrada)}
+            "total_productos": lt.size(lista_filtrada)}], headers="keys", tablefmt="grid",maxcolwidths=20)
 
 def req_3(catalog, country, channel):
     """
@@ -394,16 +394,16 @@ def req_3(catalog, country, channel):
             anio_mas_pedidos = anio
 
     end = get_time()
-    return {
-        "Tiempo_ejecucion_ms": delta_time(start, end),
-        "Total_pedidos": total,
-        "Promedio_price_per_box": promedio_price,
-        "Promedio_discount_pct": promedio_discount,
-        "Promedio_marketing_spend": promedio_marketing,
-        "Promedio_boxes_shipped": promedio_boxes,
+    return tabulate([{
+        "Tiempo_ejecucion": delta_time(start, end),
+        "#Pedidos": total,
+        "Pmd_price_per_box": promedio_price,
+        "Pmd_discount_pct": promedio_discount,
+        "Pmd_marketing_spend": promedio_marketing,
+        "Pmd_boxes_shipped": promedio_boxes,
         "Producto_mas_frecuente": producto_mas_frecuente,
         "Año_mas_pedidos": anio_mas_pedidos
-    }
+    }], headers="keys", tablefmt="grid",maxcolwidths=20)
 
 def req_4(catalog,product,country):
     """
@@ -506,19 +506,19 @@ def req_4(catalog,product,country):
     else:
         
         dict2= None
-        
+    total_pedidos=lt.size(lista_filtrada)
     end= get_time()
     
     tiempo_de_ejecucion= delta_time(start, end)
     
-    return {"Tiempo_ejecucion_ms": tiempo_de_ejecucion,
+    return tabulate([{"Tiempo_ejecucion_ms": tiempo_de_ejecucion,
             "Pmd_price_per_box": pmd_price_per_box,
             "Pmd_discount_pct": pmd_discount_pct,
             "Pmd_marketing_spend": pmd_marketing_spend,
             "Pmd_boxes_shipped": pmd_boxes_shipped,
             "Max1": dict1,
             "Max2": dict2,
-            "Total_pedidos": lt.size(lista_filtrada)} 
+            "Total_pedidos": total_pedidos}],  headers="keys", tablefmt="grid",maxcolwidths=20)
 
 def req_5(catalog,filtro, producto,fecha_inicial, fecha_final):
     """
@@ -574,14 +574,14 @@ def req_5(catalog,filtro, producto,fecha_inicial, fecha_final):
     dic_respuesta={"Price_per_box": respuesta["Price_per_Box"], "Cajas_enviadas": respuesta["Boxes_Shipped"], "Canal": respuesta["Channel"], "Fecha": respuesta["Order_Date"], "Monto": respuesta["Amount"],"Marketing_Spend": respuesta["Marketing_Spend"]}
     end= get_time()
     tiempo_de_ejecucion= delta_time(start, end)
-    return {"Tiempo_ejecucion_ms": tiempo_de_ejecucion,
+    return tabulate([{"Tiempo_ejecucion_ms": tiempo_de_ejecucion,
             "Filtro": filtro,
             "Pmd_price_per_box": pmd_price_per_box,
             "Pmd_marketing_spend": pmd_marketing_spend,
             "Pmd_boxes_shipped": pmd_boxes_shipped,
             "Total_pedidos": lt.size(lista_filtrada),
             "respuesta": dic_respuesta 
-            }
+            }], headers="keys", tablefmt="grid",maxcolwidths=20)
 
 def req_6(catalog,fecha_inicial, fecha_final):
     """
@@ -648,11 +648,13 @@ def req_6(catalog,fecha_inicial, fecha_final):
                 "Country": min_ord["Country"],
                 "Order_Date": min_ord["Order_Date"],
                 "Boxes_Shipped": min_ord["Boxes_Shipped"],
-                "Amount": min_ord["Amount"]
+                "Amount": min_ord["Amount"],
+                
             }
         }
+        
     end= get_time()
-    return {
+    return tabulate([{
         "Tiempo_ejecucion_ms": delta_time(start, end),
         "Total_pedidos": sll.size(lista_filtrada),
         "Canal_mas_usado": {
@@ -666,7 +668,7 @@ def req_6(catalog,fecha_inicial, fecha_final):
             "Total_recaudo": canales[canal_mayor_amount]["total_amount"]
         },
         "Reporte_por_canal": reporte_canales
-    }
+    }], headers="keys", tablefmt="grid",maxcolwidths=50)
 
 # Funciones para medir tiempos de ejecucion
 

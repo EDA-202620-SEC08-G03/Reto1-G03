@@ -1,7 +1,7 @@
 import sys
 import App.logic as logic
 from DataStructures.List import array_list as lt
-
+from tabulate import tabulate
 archivos = {
     "1": "chocolate_sale_100_elementos.csv",
     "2": "chocolate_sale_20_ptc.csv",
@@ -164,7 +164,7 @@ def print_req_4(control):
     country = input("País: ")
     print("\nIngrese el producto del que desea conocer la cantidad de pedidos:")
     product = input("Producto: ")
-    print(logic.req_4(control,product,country))
+    print (logic.req_4(control,product,country))
 
 
 def print_req_5(control):
