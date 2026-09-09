@@ -328,7 +328,8 @@ def req_3(catalog, country, channel):
     start = get_time()
     orders = catalog['ordenes']
     lista_filtrada = lt.new_list()
-    
+    productos = {}
+    anios = {}
     for i in range(lt.size(orders)):
         actual = lt.get_element(orders, i)
         if actual["Country"].lower().strip() == country.lower().strip(): 
@@ -348,8 +349,6 @@ def req_3(catalog, country, channel):
     suma_discount = primero["Discount_Pct"]
     suma_marketing = primero["Marketing_Spend"]
     suma_boxes = primero["Boxes_Shipped"]
-    pedido_mayor = primero
-    pedido_menor = primero
 
     for i in range(1, total):
         actual = lt.get_element(lista_filtrada, i)
@@ -358,49 +357,44 @@ def req_3(catalog, country, channel):
         suma_discount += actual["Discount_Pct"]
         suma_marketing += actual["Marketing_Spend"]
         suma_boxes += actual["Boxes_Shipped"]
-
-        if actual["Amount"] > pedido_mayor["Amount"] or (
-            actual["Amount"] == pedido_mayor["Amount"] and actual["Price_per_Box"] < pedido_mayor["Price_per_Box"]):
-            pedido_mayor = actual
-
-        if actual["Amount"] < pedido_menor["Amount"] or (
-            actual["Amount"] == pedido_menor["Amount"] and actual["Price_per_Box"] < pedido_menor["Price_per_Box"]):
-            pedido_menor = actual
+        if actual["Product"] in productos:
+            productos[actual["Product"]] += 1
+        else:
+            productos[actual["Product"]] = 1
+        if actual["order_Date"][0:4] in anios:
+            anios[actual["Order_Date"][0:4]] += 1
             
-    pmd_price = suma_price / total
-    pmd_discount = suma_discount / total
-    pmd_marketing = suma_marketing / total
-    pmd_boxes = suma_boxes / total
-
-    dic_mayor = {
-        "Order_ID": pedido_mayor["Order_ID"],
-        "Product": pedido_mayor["Product"],
-        "Order_Date": pedido_mayor["Order_Date"],
-        "Price_per_Box": pedido_mayor["Price_per_Box"],
-        "Amount": pedido_mayor["Amount"]
-    }
-
-    dic_menor = {
-        "Order_ID": pedido_menor["Order_ID"],
-        "Product": pedido_menor["Product"],
-        "Order_Date": pedido_menor["Order_Date"],
-        "Price_per_Box": pedido_menor["Price_per_Box"],
-        "Amount": pedido_menor["Amount"]
-    }
-    
+    promedio_price = suma_price / total
+    promedio_discount = suma_discount / total
+    promedio_marketing = suma_marketing / total
+    promedio_boxes = suma_boxes / total
+    i=0
+    mayor=False
+    while i<len(productos) and mayor==False:
+        if productos.keys()[i] == max(productos.values()):
+            producto_mas_frecuente = productos.keys()[i]
+            mayor = True
+        i += 1
+    j=0
+    anio_mas_pedidos = False
+    while j<len(anios) and anio_mas_pedidos==False:
+        if anios.keys()[j] == max(anios.values()):
+            anio_mas_pedidos = anios.keys()[j]
+            anio_mas_pedidos = True
+        j += 1
     end = get_time()
 
     return {
         "Tiempo_ejecucion_ms": delta_time(start, end),
         "Total_pedidos": total,
-        "Pmd_price_per_box": pmd_price,
-        "Pmd_discount_pct": pmd_discount,
-        "Pmd_marketing_spend": pmd_marketing,
-        "Pmd_boxes_shipped": pmd_boxes,
-        "Pedido_mayor_amount": dic_mayor,
-        "Pedido_menor_amount": dic_menor
+        "Promedio_price_per_box": promedio_price,
+        "Promedio_discount_pct": promedio_discount,
+        "Promedio_marketing_spend": promedio_marketing,
+        "Promedio_boxes_shipped": promedio_boxes,
+        "Producto_mas_frecuente": producto_mas_frecuente,
+        "Año_mas_pedidos": anio_mas_pedidos
     }
-          
+
 def req_4(catalog,product,country):
     """
     Retorna el resultado del requerimiento 4
