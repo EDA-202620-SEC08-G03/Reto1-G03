@@ -1,6 +1,7 @@
 import sys
 import App.logic as logic
 from DataStructures.List import array_list as lt
+from tabulate import tabulate
 
 archivos = {
     "1": "chocolate_sale_100_elementos.csv",
@@ -149,8 +150,11 @@ def print_req_3(control):
     """
         Función que imprime la solución del Requerimiento 3 en consola
     """
-    # TODO: Imprimir el resultado del requerimiento 3
-    pass
+    print("\nIngrese el país del que desea conocer la cantidad de pedidos:")
+    country = input("País: ")
+    print("\nIngrese el canal del que desea conocer la cantidad de pedidos:")
+    channel = input("Canal: ")
+    print(logic.req_3(control,country,channel))
 
 
 def print_req_4(control):
@@ -161,7 +165,7 @@ def print_req_4(control):
     country = input("País: ")
     print("\nIngrese el producto del que desea conocer la cantidad de pedidos:")
     product = input("Producto: ")
-    print(logic.req_4(control,product,country))
+    print (logic.req_4(control,product,country))
 
 
 def print_req_5(control):
