@@ -228,25 +228,37 @@ def req_1(catalog, producto):
 
     end = get_time()
 
-    return tabulate([{
-        "tiempo_transcurrido": delta_time(start, end),
-        "órdenes_totales": total,
-        "Pmd_price_per_box": pmd_price,
-        "Min_price_per_box": min_price,
-        "Max_price_per_box": max_price,
-        "Pmd_discount_pct": pmd_discount,
-        "Min_discount_pct": min_discount,
-        "Max_discount_pct": max_discount,
-        "Pmd_boxes_shipped": pmd_boxes,
-        "Min_boxes_shipped": min_boxes,
-        "Max_boxes_shipped": max_boxes,
-        "Pmd_marketing_spend": pmd_marketing,
-        "Min_marketing_spend": min_marketing,
-        "Max_marketing_spend": max_marketing,
-        "Anio_mas_pedidos": anio_mas_pedidos,
-        "Pedido_mayor_amount": dic_mayor,
-        "Pedido_menor_amount": dic_menor
-    }], headers="keys", tablefmt="grid", maxcolwidths=20) 
+    datos = {
+        "tiempo_ejecucion": "{0:.2f}".format(delta_time(start, end)),
+        "Total_Pedidos": total,
+        "Pmd_Price_per_Box": "{0:.2f}".format(pmd_price),
+        "Min_Price_per_Box": "{0:.2f}".format(min_price),
+        "Max_Price_per_Box": "{0:.2f}".format(max_price),
+        "Pmd_Discount_Pct": "{0:.2f}".format(pmd_discount),
+        "Min_Discount_Pct": "{0:.2f}".format(min_discount),
+        "Max_Discount_Pct": "{0:.2f}".format(max_discount),
+        "Pmd_Boxes_Shipped": "{0:.2f}".format(pmd_boxes),
+        "Min_Boxes_Shipped": min_boxes,
+        "Max_Boxes_Shipped": max_boxes,
+        "Pmd_Marketing_Spend": "{0:.2f}".format(pmd_marketing),
+        "Min_Marketing_Spend": "{0:.2f}".format(min_marketing),
+        "Max_Marketing_Spend": "{0:.2f}".format(max_marketing),
+        "Año_con_mas_pedidos": anio_mas_pedidos,
+        "Pedido_Mayor_Order_ID": pedido_mayor["Order_ID"],
+        "Pedido_Mayor_Country": pedido_mayor["Country"],
+        "Pedido_Mayor_Order_Date": pedido_mayor["Order_Date"],
+        "Pedido_Mayor_Price_per_Box": "{0:.2f}".format(pedido_mayor["Price_per_Box"]),
+        "Pedido_Mayor_Amount": "{0:.2f}".format(pedido_mayor["Amount"]),
+        "Pedido_Menor_Order_ID": pedido_menor["Order_ID"],
+        "Pedido_Menor_Country": pedido_menor["Country"],
+        "Pedido_Menor_Order_Date": pedido_menor["Order_Date"],
+        "Pedido_Menor_Price_per_Box": "{0:.2f}".format(pedido_menor["Price_per_Box"]),
+        "Pedido_Menor_Amount": "{0:.2f}".format(pedido_menor["Amount"]),
+    }
+
+    filas = list(datos.items())
+
+    return tabulate(filas, headers=["Variable", "Valor"], tablefmt="grid")
 
 def req_2(catalog, min_price, max_price):
     """
