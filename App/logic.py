@@ -210,22 +210,6 @@ def req_1(catalog, producto):
     pmd_boxes = suma_boxes / total
     pmd_marketing = suma_marketing / total
 
-    dic_mayor = {
-        "Order_ID": pedido_mayor["Order_ID"],
-        "Country": pedido_mayor["Country"],
-        "Order_Date": pedido_mayor["Order_Date"],
-        "Price_per_Box": pedido_mayor["Price_per_Box"],
-        "Amount": pedido_mayor["Amount"]
-    }
-
-    dic_menor = {
-        "Order_ID": pedido_menor["Order_ID"],
-        "Country": pedido_menor["Country"],
-        "Order_Date": pedido_menor["Order_Date"],
-        "Price_per_Box": pedido_menor["Price_per_Box"],
-        "Amount": pedido_menor["Amount"]
-    }
-
     end = get_time()
 
     datos = {
