@@ -130,11 +130,7 @@ def req_1(catalog, producto):
 
     if total == 0:
         end = get_time()
-        return {
-            "tiempo_transcurrido": delta_time(start, end),
-            "órdenes_totales": 0,
-            "Mensaje": "No hay pedidos para ese producto"
-        }
+        return "No hay pedidos para ese producto (tiempo de ejecución: {0:.2f} ms)".format(delta_time(start, end))
 
     primero = sll.get_element(lista_filtrada, 0)
 
@@ -232,7 +228,7 @@ def req_1(catalog, producto):
 
     end = get_time()
 
-    return {
+    return tabulate([{
         "tiempo_transcurrido": delta_time(start, end),
         "órdenes_totales": total,
         "Pmd_price_per_box": pmd_price,
@@ -250,7 +246,7 @@ def req_1(catalog, producto):
         "Anio_mas_pedidos": anio_mas_pedidos,
         "Pedido_mayor_amount": dic_mayor,
         "Pedido_menor_amount": dic_menor
-    } 
+    }], headers="keys", tablefmt="grid", maxcolwidths=20) 
 
 def req_2(catalog, min_price, max_price):
     """
