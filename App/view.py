@@ -10,7 +10,7 @@ archivos = {
     "4": "chocolate_sale_60_ptc.csv",
     "5": "chocolate_sale_80_ptc.csv",
     "6": "chocolate_sale_100_ptc.csv",
-}
+} # CREADO CON AYUDA DE IAG
 
 def new_logic():
     """
@@ -30,7 +30,7 @@ def print_menu():
     print("6- Ejecutar Requerimiento 6")
     print("7- Salir")
 
-def load_data(control):
+def load_data(control): # CREADA CON IAG
     """
     Carga los datos
     """
@@ -52,7 +52,7 @@ def load_data(control):
     resumen = logic.resumen_carga(control)
     print_resumen_datos(tiempo, resumen)
     
-def print_resumen_datos(tiempo, resumen):
+def print_resumen_datos(tiempo, resumen): # CREADA CON AYUDA DE IAG
     
     print("\nTiempo de carga: {0:.2f} ms".format(tiempo))
     print("Total de pedidos cargados: {0}".format(resumen["total"]))
@@ -71,10 +71,10 @@ def print_resumen_datos(tiempo, resumen):
     for p in resumen["ultimos_5"]:
         print_pedido(p)
 
-def print_pedido(p):
+def print_pedido(p): # CREADA CON IAG
     print(" {0} | {1} | {2} | {3} | {4} | ${5:.2f} | ${6:.2f}".format(p["Order_ID"], p["Product"], p["Country"], p["Channel"],p["Order_Date"], p["Price_per_Box"], p["Amount"]))
 
-def print_data(control, id):
+def print_data(control, id): # CREADA CON IAG
     """
         Función que imprime un dato dado su ID
     """

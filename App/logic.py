@@ -19,7 +19,7 @@ def new_logic():
     
     return catalog
 
-def to_float(valor):
+def to_float(valor): # Función creada con IAG
     """
     Convierte un texto a float. Si está vacío o no es válido, retorna None
     """
@@ -27,7 +27,7 @@ def to_float(valor):
         return float(valor)
     return None
 
-def to_int(valor):
+def to_int(valor): # Función creada con IAG
     """
     Convierte un texto a int (pasando por float, por si viene como "148.0").
     Si está vacío o no es válido, retorna None
@@ -38,7 +38,7 @@ def to_int(valor):
 
 # Funciones para la carga de datos
 
-def convertir_fila(fila):
+def convertir_fila(fila): # Función creada con IAG
     """
     Convierte una fila del CSV (dict de strings) en un pedido con tipos correctos
     """
@@ -57,7 +57,7 @@ def convertir_fila(fila):
 
     return order
 
-def load_data(catalog, filename):
+def load_data(catalog, filename): # Función creada con IAG
     """
     Carga los datos del reto
     """
@@ -72,7 +72,7 @@ def load_data(catalog, filename):
 
     return catalog
 
-def resumen_carga(catalog):
+def resumen_carga(catalog): # Función creada con IAG
     """
     Calcula las estadísticas que pide la Parte 2 sobre los datos ya cargados
     """
